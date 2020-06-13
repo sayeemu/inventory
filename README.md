@@ -1,0 +1,1 @@
+This is a  repository for Inventory management and it uses Postgres and Kafka
