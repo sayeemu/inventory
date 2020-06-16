@@ -19,7 +19,7 @@ public class InventoryKafkaController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InventoryKafkaController.class);
 	
-	@PostMapping
+	@PostMapping("/Add")
 	public void addStockInventory(@RequestBody Inventory inventory) {
 		LOGGER.info("Received request to add stock to Inventory='{}' using Kafka", inventory);
 		itemInventoryService.sendInventoryRequest(inventory, "test");

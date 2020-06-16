@@ -1,5 +1,6 @@
 package com.example.inventory.itemInventory;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,12 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.inventory.item.Item;
 import com.example.inventory.itemInventoryKafka.InventoryKafkaController;
+import com.example.inventory.report.ReportService;
+
+import net.sf.jasperreports.engine.JRException;
 
 @RequestMapping("/Inventory")
 @RestController
 public class InventoryController {
 	@Autowired
 	private InventoryService inventoryService;
+	@Autowired
+    private ReportService service;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InventoryKafkaController.class);
 		
@@ -67,5 +73,10 @@ public class InventoryController {
 		LOGGER.info("Received request to add '{}' Items with id='{}' to Inventory",quantity, id);
 		return inventoryService.addStockToInventory(quantity,id);
 	}
+	
+	@GetMapping("/report/{format}")
+    public String generateReport(@PathVariable String format) throws FileNotFoundException, JRException {
+        return service.exportReport(format);
+    }
 	
 }

@@ -39,28 +39,28 @@ public class InventoryKafkaService {
 
     public String sendInventoryRequest(Inventory itemInventory, String correlationId) {
         String payload = gson.toJson(itemInventory);
-        Message<String> message = MessageBuilder.withPayload(payload).setHeader(KafkaHeaders.TOPIC,"NewTopic").setHeader("correlationId", String.valueOf(correlationId).getBytes()).build();
+        Message<String> message = MessageBuilder.withPayload(payload).setHeader(KafkaHeaders.TOPIC,"AddTopic").setHeader("correlationId", String.valueOf(correlationId).getBytes()).build();
         itemKafkaTemplate.send(message);
-        LOGGER.info("Sending payload='{}' to topic='{}'", payload, "NewTopic");
+        LOGGER.info("Sending payload='{}' to topic='{}'", payload, "AddTopic");
         return "success";
     }
     
     public String sendCheckOutRequest(Inventory itemInventory, String correlationId) {
         String payload = gson.toJson(itemInventory);
-        Message<String> message = MessageBuilder.withPayload(payload).setHeader(KafkaHeaders.TOPIC,"NewTopic2").setHeader("correlationId", String.valueOf(correlationId).getBytes()).build();
+        Message<String> message = MessageBuilder.withPayload(payload).setHeader(KafkaHeaders.TOPIC,"CheckOutTopic").setHeader("correlationId", String.valueOf(correlationId).getBytes()).build();
         itemKafkaTemplate.send(message);
-        LOGGER.info("Sending payload='{}' to topic='{}'", payload, "NewTopic2");
+        LOGGER.info("Sending payload='{}' to topic='{}'", payload, "CheckOutTopic");
         return "success";
     }
 
-    @KafkaListener(topics = "NewTopic", groupId = "ItemInventory", containerFactory = "itemInventoryKafkaListenerContainerFactory")
+    @KafkaListener(topics = "AddTopic", groupId = "ItemInventory", containerFactory = "itemInventoryKafkaListenerContainerFactory")
     public void receiveItemInventoryRequest(@Payload String message, @Headers MessageHeaders messageHeaders)
             throws Exception {
         if (StringUtils.isEmpty(message)) {
             return;
         }
         //String correlationId = new String((byte[]) messageHeaders.get("correlationId"));
-        LOGGER.info("Received payload='{}' from topic='{}'", message, "NewTopic");
+        LOGGER.info("Received payload='{}' from topic='{}'", message, "AddTopic");
         Inventory inventory = gson.fromJson(message, Inventory.class);
         if(inventoryRepository.existsById(inventory.getId())) {
         	Inventory prevInventory = inventoryRepository.findById(inventory.getId()).get();
@@ -74,14 +74,14 @@ public class InventoryKafkaService {
         }
     }
 
-	@KafkaListener(topics = "NewTopic2", groupId = "ItemInventoryCheckOut", containerFactory = "itemInventoryCheckOutKafkaListenerContainerFactory")
+	@KafkaListener(topics = "CheckOutTopic", groupId = "ItemInventoryCheckOut", containerFactory = "itemInventoryCheckOutKafkaListenerContainerFactory")
 	public void receiveCheckOutRequest(@Payload String message, @Headers MessageHeaders messageHeaders)
 	        throws Exception {
 	    if (StringUtils.isEmpty(message)) {
 	        return;
 	    }
 	    //String correlationId = new String((byte[]) messageHeaders.get("correlationId"));
-        LOGGER.info("Received payload='{}' from topic='{}'", message, "NewTopic2");
+        LOGGER.info("Received payload='{}' from topic='{}'", message, "CheckOutTopic");
 	    Inventory inventory = gson.fromJson(message, Inventory.class);
 	    if(inventoryRepository.findById(inventory.getId()).get().getStock()<inventory.getStock()) {
 			//"Only " + inventoryRepository.findById(inventory.getId()).get().getStock() + " Item_Id " + inventory.getId() + " available"; 
@@ -90,7 +90,7 @@ public class InventoryKafkaService {
 	    else {
 	    	Inventory prevInventory = inventoryRepository.findById(inventory.getId()).get();
 			inventory.setStock(inventoryRepository.findById(inventory.getId()).get().getStock()-inventory.getStock());
-			inventoryRepository.save(prevInventory);
+			inventoryRepository.save(inventory);
 	        LOGGER.info("Request satisfied. Stock updated");
 	    }
 	}

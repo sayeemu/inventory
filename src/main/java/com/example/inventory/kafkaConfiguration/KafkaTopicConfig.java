@@ -28,7 +28,7 @@ public class KafkaTopicConfig {
      
     @Bean
     public NewTopic topic1() {
-         return new NewTopic("NewTopic", 1, (short) 1);
+         return new NewTopic("AddTopic", 1, (short) 1);
     }
     
     @Bean
@@ -40,6 +40,6 @@ public class KafkaTopicConfig {
      
     @Bean
     public NewTopic topic2() {
-         return new NewTopic("NewTopic2", 1, (short) 1);
+         return new NewTopic("CheckOutTopic", 1, (short) 1);
     }
 }
