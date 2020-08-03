@@ -56,7 +56,7 @@ public class InventoryController {
 	}
 	
 	@PostMapping
-	public void addItem(@RequestBody Inventory inventory) {
+	public void addInventory(@RequestBody Inventory inventory) {
 		LOGGER.info("Received request to add Item='{}' to Inventory",inventory);
 		inventoryService.addNewItemToInventory(inventory);
 	}

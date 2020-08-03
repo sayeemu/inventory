@@ -35,7 +35,6 @@ public class ReportService {
     public String exportReport(String reportFormat) throws FileNotFoundException, JRException {
         String path = "C:\\Users\\sayee\\Desktop\\Reports";
         
-        
         List<Report> InventoryReport = new ArrayList<>();
         for(Inventory i:inventoryRepository.findAll()) {
         	Report report = new Report(i.getId(),i.getItem().getName() , i.getItem().getCost() ,i.getStock());
@@ -56,13 +55,13 @@ public class ReportService {
         }
         count++;
         putCount(count,path);
-        return "report generated in path : " + path;
+        return "Report generated in path : " + path;
     }
     
     public int getCount(String path) {
         int count = 0;
         try {
-            if ( !new File("classpath:\\myCount.txt").exists())
+            if ( !new File(path + "\\myCount.txt").exists())
                 return 1;
             else {
                 BufferedReader br = new BufferedReader(new FileReader(new File(path+"\\myCount.txt")));

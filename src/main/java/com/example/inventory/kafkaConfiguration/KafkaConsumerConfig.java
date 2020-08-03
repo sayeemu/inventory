@@ -25,7 +25,7 @@ public class KafkaConsumerConfig {
 
     public ConsumerFactory<String, String> consumerFactory(String groupId) {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"192.168.99.100:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -40,7 +40,7 @@ public class KafkaConsumerConfig {
 
     public ConsumerFactory<String, Inventory> itemInventoryConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.99.100:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "ItemInventory");
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(Inventory.class));
     }
@@ -54,7 +54,7 @@ public class KafkaConsumerConfig {
     
     public ConsumerFactory<String, Inventory> itemInventoryCheckOutConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.99.100:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "ItemInventoryCheckOut");
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(Inventory.class));
     }

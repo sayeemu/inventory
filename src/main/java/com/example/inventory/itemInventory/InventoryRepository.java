@@ -11,6 +11,5 @@ import com.example.inventory.report.Report;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer>{
 	
-//	@Query("SELECT new package com.example.inventory.report.Report(v.id, i.name, i.cost, v.stock) FROM INVENTORY v JOIN v.item i")
-//	public List<Report> getJoinInformation();
+
 }

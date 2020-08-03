@@ -27,7 +27,7 @@ public class InventoryService {
 
 	public String CheckOut(Integer quantity, int id) {
 		if(inventoryRepository.findById(id).get().getStock()<quantity) {
-			return "Only " + inventoryRepository.findById(id).get().getStock() + " Item_Id " + id + " available"; 
+			return "Only " + inventoryRepository.findById(id).get().getStock() + " Item Id: " + id + " available"; 
 		}
 		Inventory inventory = inventoryRepository.findById(id).get();
 		inventory.setStock(inventoryRepository.findById(id).get().getStock()-quantity);

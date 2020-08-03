@@ -59,7 +59,6 @@ public class InventoryKafkaService {
         if (StringUtils.isEmpty(message)) {
             return;
         }
-        //String correlationId = new String((byte[]) messageHeaders.get("correlationId"));
         LOGGER.info("Received payload='{}' from topic='{}'", message, "AddTopic");
         Inventory inventory = gson.fromJson(message, Inventory.class);
         if(inventoryRepository.existsById(inventory.getId())) {
@@ -80,17 +79,16 @@ public class InventoryKafkaService {
 	    if (StringUtils.isEmpty(message)) {
 	        return;
 	    }
-	    //String correlationId = new String((byte[]) messageHeaders.get("correlationId"));
         LOGGER.info("Received payload='{}' from topic='{}'", message, "CheckOutTopic");
 	    Inventory inventory = gson.fromJson(message, Inventory.class);
-	    if(inventoryRepository.findById(inventory.getId()).get().getStock()<inventory.getStock()) {
-			//"Only " + inventoryRepository.findById(inventory.getId()).get().getStock() + " Item_Id " + inventory.getId() + " available"; 
+	    Inventory prevInventory = inventoryRepository.findById(inventory.getId()).get();
+	    if(prevInventory.getStock()<inventory.getStock()) {
 	        LOGGER.info("Request can't be satisfied. Required='{}' Available='{}'", inventory.getStock(), inventoryRepository.findById(inventory.getId()).get().getStock());
 	    }
 	    else {
-	    	Inventory prevInventory = inventoryRepository.findById(inventory.getId()).get();
-			inventory.setStock(inventoryRepository.findById(inventory.getId()).get().getStock()-inventory.getStock());
-			inventoryRepository.save(inventory);
+	    	
+	    	prevInventory.setStock((prevInventory.getStock())-inventory.getStock());
+			inventoryRepository.save(prevInventory);
 	        LOGGER.info("Request satisfied. Stock updated");
 	    }
 	}

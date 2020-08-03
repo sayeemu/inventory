@@ -17,7 +17,6 @@ import com.example.inventory.item.Item;
 @Table(name="Inventory")
 public class Inventory {
 	@Id
-	//@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private Integer id;
 	
